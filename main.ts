@@ -29,7 +29,7 @@ function WiseOne () {
         . . . . c b 5 5 5 5 e e . . . . 
         . . . . . f f f f f f . . . . . 
         `, SpriteKind.Player)
-    tiles.placeOnTile(TheWiseOne, tiles.getTileLocation(31, 8))
+    tiles.placeOnTile(TheWiseOne, tiles.getTileLocation(31, 28))
 }
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile15`, function (sprite, location) {
     mySprite.setVelocity(0, -125)
@@ -75,10 +75,12 @@ function Character () {
         . . . . . f f f f f f . . . . . 
         . . . . . f f . . f f . . . . . 
         `, SpriteKind.Player)
-    controller.moveSprite(mySprite, 100, 0)
-    mySprite.ay = 195
     scene.cameraFollowSprite(mySprite)
     tiles.placeOnTile(mySprite, tiles.getTileLocation(row, column))
+    mySprite.ay = 195
+    if (moveWithButtonsAllowed == 1) {
+        controller.moveSprite(mySprite, 100, 0)
+    }
 }
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (true) {
@@ -105,9 +107,40 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
 function Level1 () {
     tiles.setTilemap(tilemap`level1`)
 }
+scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile16`, function (sprite, location) {
+    if (key == 1) {
+        tiles.setTileAt(tiles.getTileLocation(9, 42), assets.tile`myTile7`)
+        tiles.setWallAt(tiles.getTileLocation(8, 42), false)
+        tiles.setWallAt(tiles.getTileLocation(8, 41), false)
+        tiles.setWallAt(tiles.getTileLocation(8, 40), false)
+        tiles.setTileAt(tiles.getTileLocation(9, 41), sprites.dungeon.floorDark0)
+        tiles.setTileAt(tiles.getTileLocation(9, 40), assets.tile`myTile8`)
+        scene.cameraShake(4, 500)
+    }
+})
 controller.A.onEvent(ControllerButtonEvent.Released, function () {
     Shield.destroy()
     SheildCreated = false
+})
+function SpriteStill () {
+    mySprite.setVelocity(0, 0)
+    mySprite.ay = 0
+    moveWithButtonsAllowed = 0
+}
+scene.onOverlapTile(SpriteKind.Player, sprites.castle.tileGrass1, function (sprite, location) {
+    mySprite.ay = 0
+    mySprite.vy = 0
+    if (moveWithButtonsAllowed == 1) {
+        controller.moveSprite(mySprite)
+    }
+})
+scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile35`, function (sprite, location) {
+    SpriteStill()
+    tiles.placeOnTile(mySprite, tiles.getTileLocation(42, 21))
+    timer.after(1000, function () {
+        moveWithButtonsAllowed = 1
+        tiles.placeOnTile(mySprite, tiles.getTileLocation(3, 8))
+    })
 })
 let SheildCreated = false
 let Shield: Sprite = null
@@ -115,20 +148,27 @@ let TheWiseOne: Sprite = null
 let mySprite: Sprite = null
 let JumpStatus = 0
 let JumpCount = 0
+let moveWithButtonsAllowed = 0
+let key = 0
 let row = 0
 let column = 0
-column = 27
+column = 47
 row = 11
+key = 0
 Level1()
 Character()
 WiseOne()
+moveWithButtonsAllowed = 1
 JumpCount = 0
 JumpStatus = 1
 let ShieldAbility = false
 timer.after(500, function () {
-    tiles.setTileAt(tiles.getTileLocation(13, 26), assets.tile`myTile8`)
-    tiles.setTileAt(tiles.getTileLocation(13, 27), assets.tile`myTile7`)
+    tiles.setTileAt(tiles.getTileLocation(13, 46), assets.tile`myTile8`)
+    tiles.setTileAt(tiles.getTileLocation(13, 47), assets.tile`myTile7`)
     scene.cameraShake(4, 500)
+})
+timer.after(4000, function () {
+    key = 1
 })
 forever(function () {
     if (SheildCreated) {
