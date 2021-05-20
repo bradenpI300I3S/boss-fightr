@@ -2,6 +2,9 @@ namespace SpriteKind {
     export const Protectoion = SpriteKind.create()
     export const Boss = SpriteKind.create()
     export const Chest = SpriteKind.create()
+    export const GoodProjectile = SpriteKind.create()
+    export const SuperGrem2 = SpriteKind.create()
+    export const SuperGrem1 = SpriteKind.create()
 }
 namespace StatusBarKind {
     export const SheildCooldown = StatusBarKind.create()
@@ -54,6 +57,10 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
         Shield.setPosition(mySprite.x + 13, mySprite.y)
         SheildCreated = true
     }
+})
+sprites.onOverlap(SpriteKind.SuperGrem1, SpriteKind.GoodProjectile, function (sprite, otherSprite) {
+    CharacterArrow.destroy()
+    Gremlin1Statusbar.value += -1
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile15`, function (sprite, location) {
     mySprite.setVelocity(0, -125)
@@ -242,6 +249,103 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
                 `)
         })
     }
+    if (BowUnlocked && ShootingUp) {
+        animation.runImageAnimation(
+        mySprite,
+        [img`
+            . . . . . . f f f f . . . e e . 
+            . . . . f f e e e e f f e d d e 
+            . . . f e e e f f e f e d d d e 
+            . . f f f f f 2 2 f f d d d e . 
+            . . f f e 2 e 2 2 e d d d e . . 
+            . . f e 2 f 2 f f d d d e f . . 
+            . . f f f 2 2 e d d d f f f . . 
+            . f f e f 2 f d d d e f e f f . 
+            . f e e f f d d d e f e e e f . 
+            . . f e e d d d e e e e e f . . 
+            . . . f d d d e e e e e f . . . 
+            . . e d d d f f f f f f 4 e . . 
+            . e d d d 2 2 2 2 2 2 f d 4 . . 
+            e d d d f 8 8 8 8 8 8 f 4 4 . . 
+            e d d e . 8 8 8 8 8 8 . . . . . 
+            . e e . . 8 8 . . 8 8 . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `,img`
+            . . . . d d d d d d d d . . . . 
+            . d d d d d f f f f d d d d d . 
+            d d d . f f e e e e f f . d d d 
+            . 1 . f e e e f f e e e f . 1 . 
+            . . f f f f f 2 2 f f f f f . . 
+            . . f f e 2 e 2 2 e 2 e f f . . 
+            . . f e 2 f 2 f f 2 f 2 e f . . 
+            . . f f f 2 2 e e 2 2 f f f . . 
+            . f f e f 2 f e e f 2 f e f f . 
+            . f e e f f e e e e f e e e f . 
+            . . f e e e e e e e e e e f . . 
+            . . . f e e e e e e e e f . . . 
+            . . . . f f f f f f f f . . . . 
+            . . . . f 2 2 2 2 2 2 f . . . . 
+            . . . . f 8 8 8 8 8 8 f . . . . 
+            . . . . . 8 8 8 8 8 8 . . . . . 
+            . . . . . 8 8 . . 8 8 . . . . . 
+            `,img`
+            . . . . . . f f f f . . . e e . 
+            . . . . f f e e e e f f e d d e 
+            . . . f e e e f f e f e d d d e 
+            . . f f f f f 2 2 f f d d d e . 
+            . . f f e 2 e 2 2 e d d d e . . 
+            . . f e 2 f 2 f f d d d e f . . 
+            . . f f f 2 2 e d d d f f f . . 
+            . f f e f 2 f d d d e f e f f . 
+            . f e e f f d d d e f e e e f . 
+            . . f e e d d d e e e e e f . . 
+            . . . f d d d e e e e e f . . . 
+            . . e d d d f f f f f f 4 e . . 
+            . e d d d 2 2 2 2 2 2 f d 4 . . 
+            e d d d f 4 4 4 4 4 4 f 4 4 . . 
+            e d d e . f f f f f f . . . . . 
+            . e e . . f f . . f f . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `],
+        200,
+        false
+        )
+        timer.after(200, function () {
+            CharacterArrow = sprites.createProjectileFromSprite(img`
+                . . 1 . . 
+                . 1 1 1 . 
+                . . d . . 
+                . . d . . 
+                . . d . . 
+                . . d . . 
+                . . d . . 
+                . . d . . 
+                . f f f . 
+                . f . f . 
+                `, mySprite, 0, -70)
+            CharacterArrow.setKind(SpriteKind.GoodProjectile)
+        })
+        timer.after(500, function () {
+            mySprite.setImage(img`
+                . . . . . . f f f f . . e e . . 
+                . . . . f f e e e e f e d d e . 
+                . . . f e e e f f e e d d d e . 
+                . . f f f f f 2 2 e d d d e . . 
+                . . f f e 2 e 2 e d d d e f . . 
+                . . f e 2 f 2 e d d d e e f . . 
+                . . f f f 2 e d d d e f f f . . 
+                . f f e f e d d d e 2 f e f f . 
+                . f e e e d d d e e f e e e f . 
+                . . f e d d d e e e e e e f . . 
+                . . e d d d e e e e e e f . . . 
+                . e d d d e f f f f f f 4 e . . 
+                e d d d e 2 2 2 2 2 2 f d 4 . . 
+                e d d e f 8 8 8 8 8 8 f 4 4 . . 
+                . e e . . 8 8 8 8 8 8 . . . . . 
+                . . . . . 8 8 . . 8 8 . . . . . 
+                `)
+        })
+    }
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile12`, function (sprite, location) {
     tiles.setTileAt(location, assets.tile`myTile6`)
@@ -288,62 +392,99 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Chest, function (sprite, otherSp
         ....................
         ....................
         `)
-    Gremlin41 = sprites.create(img`
-        ........................
-        ........................
-        ........................
-        ........................
-        ..........ffff..........
-        ........ff1111ff........
-        .......fb111111bf.......
-        .......fee1111eef.......
-        ......feeee11eeeef......
-        ......fd1ee11ee1df......
-        ......fdd2221222df......
-        ......fbd21fdf12bf......
-        ......fcd2ff1ff2cf......
-        .......fb111111bf.......
-        ......fffcdb1bdffff.....
-        ....fc111cbfbfc111cf....
-        ....f1b1b1ffff1b1b1f....
-        ....fbfbffffffbfbfbf....
-        .........ffffff.........
-        ...........fff..........
-        ........................
-        ........................
-        ........................
-        ........................
-        `, SpriteKind.Player)
-    tiles.placeOnTile(Gremlin41, tiles.getTileLocation(38, 45))
-    Gremlin42 = sprites.create(img`
-        ........................
-        ........................
-        ........................
-        ........................
-        ..........ffff..........
-        ........ff1111ff........
-        .......fb111111bf.......
-        .......fee1111eef.......
-        ......feeee11eeeef......
-        ......fd1ee11ee1df......
-        ......fdd2221222df......
-        ......fbd21fdf12bf......
-        ......fcd2ff1ff2cf......
-        .......fb111111bf.......
-        ......fffcdb1bdffff.....
-        ....fc111cbfbfc111cf....
-        ....f1b1b1ffff1b1b1f....
-        ....fbfbffffffbfbfbf....
-        .........ffffff.........
-        ...........fff..........
-        ........................
-        ........................
-        ........................
-        ........................
-        `, SpriteKind.Player)
-    tiles.placeOnTile(Gremlin42, tiles.getTileLocation(40, 45))
-    SuperGremlinsAlive = true
-    key = 1
+    game.showLongText("This bow should serve as a replace to your damaged sword!", DialogLayout.Bottom)
+    timer.after(500, function () {
+        Gremlin41 = sprites.create(img`
+            ........................
+            ........................
+            ........................
+            ........................
+            ..........ffff..........
+            ........ff1111ff........
+            .......fb111111bf.......
+            .......fee1111eef.......
+            ......feeee11eeeef......
+            ......fd1ee11ee1df......
+            ......fdd2221222df......
+            ......fbd21fdf12bf......
+            ......fcd2ff1ff2cf......
+            .......fb111111bf.......
+            ......fffcdb1bdffff.....
+            ....fc111cbfbfc111cf....
+            ....f1b1b1ffff1b1b1f....
+            ....fbfbffffffbfbfbf....
+            .........ffffff.........
+            ...........fff..........
+            ........................
+            ........................
+            ........................
+            ........................
+            `, SpriteKind.SuperGrem1)
+        tiles.placeOnTile(Gremlin41, tiles.getTileLocation(38, 46))
+        Gremlin1Statusbar = statusbars.create(20, 4, StatusBarKind.Health)
+        Gremlin1Statusbar.attachToSprite(Gremlin41)
+        Gremlin1Statusbar.value = 100
+        Gremlin42 = sprites.create(img`
+            ........................
+            ........................
+            ........................
+            ........................
+            ..........ffff..........
+            ........ff1111ff........
+            .......fb111111bf.......
+            .......fee1111eef.......
+            ......feeee11eeeef......
+            ......fd1ee11ee1df......
+            ......fdd2221222df......
+            ......fbd21fdf12bf......
+            ......fcd2ff1ff2cf......
+            .......fb111111bf.......
+            ......fffcdb1bdffff.....
+            ....fc111cbfbfc111cf....
+            ....f1b1b1ffff1b1b1f....
+            ....fbfbffffffbfbfbf....
+            .........ffffff.........
+            ...........fff..........
+            ........................
+            ........................
+            ........................
+            ........................
+            `, SpriteKind.SuperGrem2)
+        tiles.placeOnTile(Gremlin42, tiles.getTileLocation(40, 46))
+        Gremlin2Statusbar = statusbars.create(20, 4, StatusBarKind.Health)
+        Gremlin2Statusbar.attachToSprite(Gremlin42)
+        Gremlin2Statusbar.value = 100
+        SuperGremlinsAlive = true
+        ShootingUp = true
+        SwordUnlocked = false
+        BowUnlocked = true
+        key = 1
+        game.showLongText("What has just appeared...", DialogLayout.Bottom)
+    })
+    timer.after(200, function () {
+        mySprite.setImage(img`
+            . . . . . . f f f f . . e e . . 
+            . . . . f f e e e e f e d d e . 
+            . . . f e e e f f e e d d d e . 
+            . . f f f f f 2 2 e d d d e . . 
+            . . f f e 2 e 2 e d d d e f . . 
+            . . f e 2 f 2 e d d d e e f . . 
+            . . f f f 2 e d d d e f f f . . 
+            . f f e f e d d d e 2 f e f f . 
+            . f e e e d d d e e f e e e f . 
+            . . f e d d d e e e e e e f . . 
+            . . e d d d e e e e e e f . . . 
+            . e d d d e f f f f f f 4 e . . 
+            e d d d e 2 2 2 2 2 2 f d 4 . . 
+            e d d e f 8 8 8 8 8 8 f 4 4 . . 
+            . e e . . 8 8 8 8 8 8 . . . . . 
+            . . . . . 8 8 . . 8 8 . . . . . 
+            `)
+    })
+})
+sprites.onOverlap(SpriteKind.SuperGrem2, SpriteKind.GoodProjectile, function (sprite, otherSprite) {
+    CharacterArrow.destroy()
+    Gremlin2Statusbar.value += -1
 })
 function Level1 () {
     tiles.setTilemap(tilemap`level1`)
@@ -599,9 +740,13 @@ let Gremlin22: Sprite = null
 let Gremlin21: Sprite = null
 let Gremlin12: Sprite = null
 let Gremlin11: Sprite = null
+let Gremlin2Statusbar: StatusBarSprite = null
 let Gremlin42: Sprite = null
 let Gremlin41: Sprite = null
+let ShootingUp = false
 let SwordInAction = false
+let Gremlin1Statusbar: StatusBarSprite = null
+let CharacterArrow: Sprite = null
 let SheildCreated = false
 let Shield: Sprite = null
 let TheWiseOne: Sprite = null
@@ -613,6 +758,7 @@ let BossinitilizeFire = false
 let JumpStatus = 0
 let JumpCount = 0
 let moveOnY = 0
+let BowUnlocked = false
 let key = 0
 let row = 0
 let column = 0
@@ -623,6 +769,7 @@ Level1()
 Character()
 SheildGremlins()
 WiseOne()
+BowUnlocked = false
 let AssistantAlive = false
 let GremlinKillCount = 0
 let moveOnX = 100
@@ -823,7 +970,95 @@ game.onUpdateInterval(5000, function () {
         FireBall.follow(mySprite, 30)
     }
 })
-game.onUpdateInterval(5000, function () {
+forever(function () {
+    if (GremlinKillCount == 2) {
+        tiles.setWallAt(tiles.getTileLocation(36, 36), false)
+        tiles.setWallAt(tiles.getTileLocation(37, 36), false)
+        tiles.setWallAt(tiles.getTileLocation(38, 36), false)
+        tiles.setWallAt(tiles.getTileLocation(39, 36), false)
+        tiles.setWallAt(tiles.getTileLocation(40, 36), false)
+        tiles.setWallAt(tiles.getTileLocation(41, 36), false)
+        tiles.setWallAt(tiles.getTileLocation(42, 36), false)
+        tiles.setTileAt(tiles.getTileLocation(35, 36), sprites.dungeon.darkGroundWest)
+        tiles.setTileAt(tiles.getTileLocation(36, 36), sprites.dungeon.darkGroundCenter)
+        tiles.setTileAt(tiles.getTileLocation(37, 36), sprites.dungeon.darkGroundCenter)
+        tiles.setTileAt(tiles.getTileLocation(38, 36), sprites.dungeon.darkGroundCenter)
+        tiles.setTileAt(tiles.getTileLocation(39, 36), sprites.dungeon.darkGroundCenter)
+        tiles.setTileAt(tiles.getTileLocation(40, 36), sprites.dungeon.darkGroundCenter)
+        tiles.setTileAt(tiles.getTileLocation(41, 36), sprites.dungeon.darkGroundCenter)
+        tiles.setTileAt(tiles.getTileLocation(42, 36), sprites.dungeon.darkGroundCenter)
+        tiles.setTileAt(tiles.getTileLocation(43, 36), sprites.dungeon.darkGroundEast)
+    }
+    if (GremlinKillCount == 4) {
+        tiles.setWallAt(tiles.getTileLocation(36, 40), false)
+        tiles.setWallAt(tiles.getTileLocation(37, 40), false)
+        tiles.setWallAt(tiles.getTileLocation(38, 40), false)
+        tiles.setWallAt(tiles.getTileLocation(39, 40), false)
+        tiles.setWallAt(tiles.getTileLocation(40, 40), false)
+        tiles.setWallAt(tiles.getTileLocation(41, 40), false)
+        tiles.setWallAt(tiles.getTileLocation(42, 40), false)
+        tiles.setTileAt(tiles.getTileLocation(35, 40), sprites.dungeon.darkGroundWest)
+        tiles.setTileAt(tiles.getTileLocation(36, 40), sprites.dungeon.darkGroundCenter)
+        tiles.setTileAt(tiles.getTileLocation(37, 40), sprites.dungeon.darkGroundCenter)
+        tiles.setTileAt(tiles.getTileLocation(38, 40), sprites.dungeon.darkGroundCenter)
+        tiles.setTileAt(tiles.getTileLocation(39, 40), sprites.dungeon.darkGroundCenter)
+        tiles.setTileAt(tiles.getTileLocation(40, 40), sprites.dungeon.darkGroundCenter)
+        tiles.setTileAt(tiles.getTileLocation(41, 40), sprites.dungeon.darkGroundCenter)
+        tiles.setTileAt(tiles.getTileLocation(42, 40), sprites.dungeon.darkGroundCenter)
+        tiles.setTileAt(tiles.getTileLocation(43, 40), sprites.dungeon.darkGroundEast)
+    }
+    if (GremlinKillCount == 6) {
+        mySprite.setImage(img`
+            . . . . . . f f f f . . . . . . 
+            . . . . f f f 2 2 f f f . . . . 
+            . . . f f f 2 2 2 2 f f f . . . 
+            . . f f f e e e e e e f f f . . 
+            . . f f e 2 2 2 2 2 2 e e f . . 
+            . . f e 2 f f f f f f 2 e f . . 
+            . . f f f f e e e e f f f f . . 
+            . f f e f b f 4 4 f b f e f f . 
+            . f e e 4 1 f d d f 1 4 e e f . 
+            . . f e e d d d d d d e e f . . 
+            . . . f e e 4 4 4 4 e e f . . . 
+            . . e 4 f 2 2 2 2 2 2 f 4 e . . 
+            . . 4 d f 2 8 8 8 8 2 f d 4 . . 
+            . . 4 4 f 8 8 9 9 8 8 f 4 4 . . 
+            . . . . . 8 9 8 8 9 8 . . . . . 
+            . . . . . 8 8 . . 8 8 . . . . . 
+            `)
+        timer.after(500, function () {
+            game.showLongText("Oh no! Your sword has broken", DialogLayout.Bottom)
+            tiles.setWallAt(tiles.getTileLocation(36, 44), false)
+            tiles.setWallAt(tiles.getTileLocation(37, 44), false)
+            tiles.setWallAt(tiles.getTileLocation(38, 44), false)
+            tiles.setWallAt(tiles.getTileLocation(39, 44), false)
+            tiles.setWallAt(tiles.getTileLocation(40, 44), false)
+            tiles.setWallAt(tiles.getTileLocation(41, 44), false)
+            tiles.setWallAt(tiles.getTileLocation(42, 44), false)
+            tiles.setTileAt(tiles.getTileLocation(35, 44), sprites.dungeon.darkGroundWest)
+            tiles.setTileAt(tiles.getTileLocation(36, 44), sprites.dungeon.darkGroundCenter)
+            tiles.setTileAt(tiles.getTileLocation(37, 44), sprites.dungeon.darkGroundCenter)
+            tiles.setTileAt(tiles.getTileLocation(38, 44), sprites.dungeon.darkGroundCenter)
+            tiles.setTileAt(tiles.getTileLocation(39, 44), sprites.dungeon.darkGroundCenter)
+            tiles.setTileAt(tiles.getTileLocation(40, 44), sprites.dungeon.darkGroundCenter)
+            tiles.setTileAt(tiles.getTileLocation(41, 44), sprites.dungeon.darkGroundCenter)
+            tiles.setTileAt(tiles.getTileLocation(42, 44), sprites.dungeon.darkGroundCenter)
+            tiles.setTileAt(tiles.getTileLocation(43, 44), sprites.dungeon.darkGroundEast)
+        })
+        GremlinKillCount = 7
+    }
+})
+forever(function () {
+    if (SheildCreated) {
+        Shield.setPosition(mySprite.x + 13, mySprite.y)
+    }
+})
+forever(function () {
+    if (mySprite.isHittingTile(CollisionDirection.Bottom)) {
+        JumpCount = 0
+    }
+})
+game.onUpdateInterval(randint(4000, 7500), function () {
     if (SuperGremlinsAlive) {
         animation.runImageAnimation(
         Gremlin41,
@@ -932,23 +1167,22 @@ game.onUpdateInterval(5000, function () {
         false
         )
         GremlinShoota1 = sprites.createProjectileFromSprite(img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
+            . . c c c c b b c . . 
+            . c c b b b b b c c . 
+            c c c b c c c c c c c 
+            c b b b b b c c c c c 
+            c b b c c c c c b c c 
+            c c c c b b b c b c c 
+            c c b b c c b b b c c 
+            c c b b b b b c b c c 
+            c c b b c c b b c c c 
+            . c c c b b b b b c . 
+            . . c c c c c c c . . 
             `, Gremlin41, 20, 20)
+    }
+})
+game.onUpdateInterval(randint(4000, 7500), function () {
+    if (SuperGremlinsAlive) {
         animation.runImageAnimation(
         Gremlin42,
         [img`
@@ -1056,88 +1290,17 @@ game.onUpdateInterval(5000, function () {
         false
         )
         GremlinShoota2 = sprites.createProjectileFromSprite(img`
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
+            . . c c c c b b c . . 
+            . c c b b b b b c c . 
+            c c c b c c c c c c c 
+            c b b b b b c c c c c 
+            c b b c c c c c b c c 
+            c c c c b b b c b c c 
+            c c b b c c b b b c c 
+            c c b b b b b c b c c 
+            c c b b c c b b c c c 
+            . c c c b b b b b c . 
+            . . c c c c c c c . . 
             `, Gremlin42, 20, 30)
-    }
-})
-forever(function () {
-    if (GremlinKillCount == 2) {
-        tiles.setWallAt(tiles.getTileLocation(36, 36), false)
-        tiles.setWallAt(tiles.getTileLocation(37, 36), false)
-        tiles.setWallAt(tiles.getTileLocation(38, 36), false)
-        tiles.setWallAt(tiles.getTileLocation(39, 36), false)
-        tiles.setWallAt(tiles.getTileLocation(40, 36), false)
-        tiles.setWallAt(tiles.getTileLocation(41, 36), false)
-        tiles.setWallAt(tiles.getTileLocation(42, 36), false)
-        tiles.setTileAt(tiles.getTileLocation(35, 36), sprites.dungeon.darkGroundWest)
-        tiles.setTileAt(tiles.getTileLocation(36, 36), sprites.dungeon.darkGroundCenter)
-        tiles.setTileAt(tiles.getTileLocation(37, 36), sprites.dungeon.darkGroundCenter)
-        tiles.setTileAt(tiles.getTileLocation(38, 36), sprites.dungeon.darkGroundCenter)
-        tiles.setTileAt(tiles.getTileLocation(39, 36), sprites.dungeon.darkGroundCenter)
-        tiles.setTileAt(tiles.getTileLocation(40, 36), sprites.dungeon.darkGroundCenter)
-        tiles.setTileAt(tiles.getTileLocation(41, 36), sprites.dungeon.darkGroundCenter)
-        tiles.setTileAt(tiles.getTileLocation(42, 36), sprites.dungeon.darkGroundCenter)
-        tiles.setTileAt(tiles.getTileLocation(43, 36), sprites.dungeon.darkGroundEast)
-    }
-    if (GremlinKillCount == 4) {
-        tiles.setWallAt(tiles.getTileLocation(36, 40), false)
-        tiles.setWallAt(tiles.getTileLocation(37, 40), false)
-        tiles.setWallAt(tiles.getTileLocation(38, 40), false)
-        tiles.setWallAt(tiles.getTileLocation(39, 40), false)
-        tiles.setWallAt(tiles.getTileLocation(40, 40), false)
-        tiles.setWallAt(tiles.getTileLocation(41, 40), false)
-        tiles.setWallAt(tiles.getTileLocation(42, 40), false)
-        tiles.setTileAt(tiles.getTileLocation(35, 40), sprites.dungeon.darkGroundWest)
-        tiles.setTileAt(tiles.getTileLocation(36, 40), sprites.dungeon.darkGroundCenter)
-        tiles.setTileAt(tiles.getTileLocation(37, 40), sprites.dungeon.darkGroundCenter)
-        tiles.setTileAt(tiles.getTileLocation(38, 40), sprites.dungeon.darkGroundCenter)
-        tiles.setTileAt(tiles.getTileLocation(39, 40), sprites.dungeon.darkGroundCenter)
-        tiles.setTileAt(tiles.getTileLocation(40, 40), sprites.dungeon.darkGroundCenter)
-        tiles.setTileAt(tiles.getTileLocation(41, 40), sprites.dungeon.darkGroundCenter)
-        tiles.setTileAt(tiles.getTileLocation(42, 40), sprites.dungeon.darkGroundCenter)
-        tiles.setTileAt(tiles.getTileLocation(43, 40), sprites.dungeon.darkGroundEast)
-    }
-    if (GremlinKillCount == 6) {
-        tiles.setWallAt(tiles.getTileLocation(36, 44), false)
-        tiles.setWallAt(tiles.getTileLocation(37, 44), false)
-        tiles.setWallAt(tiles.getTileLocation(38, 44), false)
-        tiles.setWallAt(tiles.getTileLocation(39, 44), false)
-        tiles.setWallAt(tiles.getTileLocation(40, 44), false)
-        tiles.setWallAt(tiles.getTileLocation(41, 44), false)
-        tiles.setWallAt(tiles.getTileLocation(42, 44), false)
-        tiles.setTileAt(tiles.getTileLocation(35, 44), sprites.dungeon.darkGroundWest)
-        tiles.setTileAt(tiles.getTileLocation(36, 44), sprites.dungeon.darkGroundCenter)
-        tiles.setTileAt(tiles.getTileLocation(37, 44), sprites.dungeon.darkGroundCenter)
-        tiles.setTileAt(tiles.getTileLocation(38, 44), sprites.dungeon.darkGroundCenter)
-        tiles.setTileAt(tiles.getTileLocation(39, 44), sprites.dungeon.darkGroundCenter)
-        tiles.setTileAt(tiles.getTileLocation(40, 44), sprites.dungeon.darkGroundCenter)
-        tiles.setTileAt(tiles.getTileLocation(41, 44), sprites.dungeon.darkGroundCenter)
-        tiles.setTileAt(tiles.getTileLocation(42, 44), sprites.dungeon.darkGroundCenter)
-        tiles.setTileAt(tiles.getTileLocation(43, 44), sprites.dungeon.darkGroundEast)
-    }
-})
-forever(function () {
-    if (SheildCreated) {
-        Shield.setPosition(mySprite.x + 13, mySprite.y)
-    }
-})
-forever(function () {
-    if (mySprite.isHittingTile(CollisionDirection.Bottom)) {
-        JumpCount = 0
     }
 })
