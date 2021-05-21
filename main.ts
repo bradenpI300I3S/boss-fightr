@@ -5,6 +5,7 @@ namespace SpriteKind {
     export const GoodProjectile = SpriteKind.create()
     export const SuperGrem2 = SpriteKind.create()
     export const SuperGrem1 = SpriteKind.create()
+    export const EnemeyProjectile = SpriteKind.create()
 }
 namespace StatusBarKind {
     export const SheildCooldown = StatusBarKind.create()
@@ -60,7 +61,7 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
 })
 sprites.onOverlap(SpriteKind.SuperGrem1, SpriteKind.GoodProjectile, function (sprite, otherSprite) {
     CharacterArrow.destroy()
-    Gremlin1Statusbar.value += -1
+    Gremlin1Statusbar.value += -10
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile15`, function (sprite, location) {
     mySprite.setVelocity(0, -125)
@@ -109,6 +110,7 @@ function Character () {
     scene.cameraFollowSprite(mySprite)
     tiles.placeOnTile(mySprite, tiles.getTileLocation(row, column))
     mySprite.ay = 195
+    controller.moveSprite(mySprite, 100, 0)
 }
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (SwordUnlocked) {
@@ -345,6 +347,7 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
                 . . . . . 8 8 . . 8 8 . . . . . 
                 `)
         })
+        pause(750)
     }
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile12`, function (sprite, location) {
@@ -484,7 +487,7 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Chest, function (sprite, otherSp
 })
 sprites.onOverlap(SpriteKind.SuperGrem2, SpriteKind.GoodProjectile, function (sprite, otherSprite) {
     CharacterArrow.destroy()
-    Gremlin2Statusbar.value += -1
+    Gremlin2Statusbar.value += -10
 })
 function Level1 () {
     tiles.setTilemap(tilemap`level1`)
@@ -681,7 +684,7 @@ controller.B.onEvent(ControllerButtonEvent.Released, function () {
     SheildCreated = false
 })
 function EvilDragon () {
-    Boss = sprites.create(img`
+    Boss2 = sprites.create(img`
         ............ccc.........
         .......cccccccc.........
         .....cc55555cc..cc......
@@ -707,7 +710,7 @@ function EvilDragon () {
         ...ccccccd555ddccc......
         ........cccccccc........
         `, SpriteKind.Boss)
-    tiles.placeOnTile(Boss, tiles.getTileLocation(14, 12))
+    tiles.placeOnTile(Boss2, tiles.getTileLocation(14, 12))
     BossinitilizeFire = true
 }
 function CharacterTestCheat () {
@@ -733,7 +736,8 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSp
 let GremlinShoota2: Sprite = null
 let GremlinShoota1: Sprite = null
 let FireBall: Sprite = null
-let Boss: Sprite = null
+let GremlinKillCount = 0
+let Boss2: Sprite = null
 let Gremlin32: Sprite = null
 let Gremlin31: Sprite = null
 let Gremlin22: Sprite = null
@@ -762,6 +766,7 @@ let BowUnlocked = false
 let key = 0
 let row = 0
 let column = 0
+let AssistantAlive = false
 column = 47
 row = 11
 key = 0
@@ -770,8 +775,6 @@ Character()
 SheildGremlins()
 WiseOne()
 BowUnlocked = false
-let AssistantAlive = false
-let GremlinKillCount = 0
 let moveOnX = 100
 moveOnY = 0
 let moveWithButtonsAllowed = 1
@@ -793,7 +796,7 @@ CharacterTestCheat()
 game.onUpdateInterval(5000, function () {
     if (BossinitilizeFire) {
         animation.runImageAnimation(
-        Boss,
+        Boss2,
         [img`
             ........................
             ........................
@@ -965,7 +968,7 @@ game.onUpdateInterval(5000, function () {
             . . . 4 4 2 2 4 4 4 2 4 4 . . . 
             . . . . . 4 4 4 4 4 4 . . . . . 
             . . . . . . . . . . . . . . . . 
-            `, Boss, 1, 1)
+            `, Boss2, 1, 1)
         FireBall.setKind(SpriteKind.Projectile)
         FireBall.follow(mySprite, 30)
     }
@@ -1026,25 +1029,23 @@ forever(function () {
             . . . . . 8 9 8 8 9 8 . . . . . 
             . . . . . 8 8 . . 8 8 . . . . . 
             `)
-        timer.after(500, function () {
-            game.showLongText("Oh no! Your sword has broken", DialogLayout.Bottom)
-            tiles.setWallAt(tiles.getTileLocation(36, 44), false)
-            tiles.setWallAt(tiles.getTileLocation(37, 44), false)
-            tiles.setWallAt(tiles.getTileLocation(38, 44), false)
-            tiles.setWallAt(tiles.getTileLocation(39, 44), false)
-            tiles.setWallAt(tiles.getTileLocation(40, 44), false)
-            tiles.setWallAt(tiles.getTileLocation(41, 44), false)
-            tiles.setWallAt(tiles.getTileLocation(42, 44), false)
-            tiles.setTileAt(tiles.getTileLocation(35, 44), sprites.dungeon.darkGroundWest)
-            tiles.setTileAt(tiles.getTileLocation(36, 44), sprites.dungeon.darkGroundCenter)
-            tiles.setTileAt(tiles.getTileLocation(37, 44), sprites.dungeon.darkGroundCenter)
-            tiles.setTileAt(tiles.getTileLocation(38, 44), sprites.dungeon.darkGroundCenter)
-            tiles.setTileAt(tiles.getTileLocation(39, 44), sprites.dungeon.darkGroundCenter)
-            tiles.setTileAt(tiles.getTileLocation(40, 44), sprites.dungeon.darkGroundCenter)
-            tiles.setTileAt(tiles.getTileLocation(41, 44), sprites.dungeon.darkGroundCenter)
-            tiles.setTileAt(tiles.getTileLocation(42, 44), sprites.dungeon.darkGroundCenter)
-            tiles.setTileAt(tiles.getTileLocation(43, 44), sprites.dungeon.darkGroundEast)
-        })
+        game.showLongText("Oh no! Your sword has broken", DialogLayout.Bottom)
+        tiles.setWallAt(tiles.getTileLocation(36, 44), false)
+        tiles.setWallAt(tiles.getTileLocation(37, 44), false)
+        tiles.setWallAt(tiles.getTileLocation(38, 44), false)
+        tiles.setWallAt(tiles.getTileLocation(39, 44), false)
+        tiles.setWallAt(tiles.getTileLocation(40, 44), false)
+        tiles.setWallAt(tiles.getTileLocation(41, 44), false)
+        tiles.setWallAt(tiles.getTileLocation(42, 44), false)
+        tiles.setTileAt(tiles.getTileLocation(35, 44), sprites.dungeon.darkGroundWest)
+        tiles.setTileAt(tiles.getTileLocation(36, 44), sprites.dungeon.darkGroundCenter)
+        tiles.setTileAt(tiles.getTileLocation(37, 44), sprites.dungeon.darkGroundCenter)
+        tiles.setTileAt(tiles.getTileLocation(38, 44), sprites.dungeon.darkGroundCenter)
+        tiles.setTileAt(tiles.getTileLocation(39, 44), sprites.dungeon.darkGroundCenter)
+        tiles.setTileAt(tiles.getTileLocation(40, 44), sprites.dungeon.darkGroundCenter)
+        tiles.setTileAt(tiles.getTileLocation(41, 44), sprites.dungeon.darkGroundCenter)
+        tiles.setTileAt(tiles.getTileLocation(42, 44), sprites.dungeon.darkGroundCenter)
+        tiles.setTileAt(tiles.getTileLocation(43, 44), sprites.dungeon.darkGroundEast)
         GremlinKillCount = 7
     }
 })
@@ -1057,6 +1058,9 @@ forever(function () {
     if (mySprite.isHittingTile(CollisionDirection.Bottom)) {
         JumpCount = 0
     }
+})
+forever(function () {
+	
 })
 game.onUpdateInterval(randint(4000, 7500), function () {
     if (SuperGremlinsAlive) {
@@ -1179,6 +1183,7 @@ game.onUpdateInterval(randint(4000, 7500), function () {
             . c c c b b b b b c . 
             . . c c c c c c c . . 
             `, Gremlin41, 20, 20)
+        mySprite.setKind(SpriteKind.EnemeyProjectile)
     }
 })
 game.onUpdateInterval(randint(4000, 7500), function () {
