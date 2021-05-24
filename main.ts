@@ -6,6 +6,7 @@ namespace SpriteKind {
     export const SuperGrem2 = SpriteKind.create()
     export const SuperGrem1 = SpriteKind.create()
     export const EnemeyProjectile = SpriteKind.create()
+    export const Princes = SpriteKind.create()
 }
 namespace StatusBarKind {
     export const SheildCooldown = StatusBarKind.create()
@@ -42,6 +43,15 @@ function WiseOne () {
         `, SpriteKind.Player)
     tiles.placeOnTile(TheWiseOne, tiles.getTileLocation(31, 28))
 }
+statusbars.onStatusReached(StatusBarKind.Gremlin1Status, statusbars.StatusComparison.EQ, statusbars.ComparisonType.Percentage, 40, function (status) {
+    Gremlin41.vx = SuperGremlinVelo * 5
+    SuperGremlinInvincible = true
+    timer.after(7500, function () {
+        SuperGremlinInvincible = false
+        GremlinShootSpeed = 2500
+        Gremlin41.vx = 20
+    })
+})
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
     if (true) {
         Shield = sprites.create(img`
@@ -65,10 +75,11 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
     }
 })
 sprites.onOverlap(SpriteKind.SuperGrem1, SpriteKind.GoodProjectile, function (sprite, otherSprite) {
-    CharacterArrow.destroy()
     if (SuperGremlinInvincible == false) {
+        CharacterArrow.destroy()
         Gremlin1Statusbar.value += -10
     } else {
+        CharacterArrow.destroy()
         Gremlin1Statusbar.value += 10
     }
 })
@@ -120,9 +131,9 @@ function Character () {
     tiles.placeOnTile(mySprite, tiles.getTileLocation(row, column))
     mySprite.ay = 195
     controller.moveSprite(mySprite, 100, 0)
-    statusbar = statusbars.create(12, 2, StatusBarKind.Health)
-    statusbar.attachToSprite(mySprite, 2, 0)
-    statusbar.value = 300
+    CharacterStatusBar = statusbars.create(12, 2, StatusBarKind.Health)
+    CharacterStatusBar.attachToSprite(mySprite, 2, 0)
+    CharacterStatusBar.value = 100
 }
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (SwordUnlocked) {
@@ -388,10 +399,6 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile12`, function (sprite, 
         `)
     SwordUnlocked = true
 })
-statusbars.onStatusReached(StatusBarKind.Gremlin1Status, statusbars.StatusComparison.EQ, statusbars.ComparisonType.Percentage, 50, function (status) {
-    Gremlin41.vx = SuperGremlinVelo * 5
-    SuperGremlinInvincible = true
-})
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Chest, function (sprite, otherSprite) {
     LegendaryChest.destroy()
     mySprite.setImage(img`
@@ -447,7 +454,15 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Chest, function (sprite, otherSp
         Gremlin1Statusbar = statusbars.create(20, 2, StatusBarKind.Gremlin1Status)
         Gremlin41.vx = SuperGremlinVelo
         Gremlin1Statusbar.attachToSprite(Gremlin41)
-        Gremlin1Statusbar.value = 140
+        Gremlin1Statusbar.value = 200
+        tiles.setTileAt(tiles.getTileLocation(41, 42), assets.tile`myTile44`)
+        tiles.setWallAt(tiles.getTileLocation(41, 42), true)
+        tiles.setTileAt(tiles.getTileLocation(36, 40), assets.tile`myTile44`)
+        tiles.setWallAt(tiles.getTileLocation(36, 40), true)
+        tiles.setTileAt(tiles.getTileLocation(39, 36), assets.tile`myTile44`)
+        tiles.setWallAt(tiles.getTileLocation(39, 36), true)
+        tiles.setTileAt(tiles.getTileLocation(42, 36), assets.tile`myTile44`)
+        tiles.setWallAt(tiles.getTileLocation(42, 35), true)
         Gremlin41.setBounceOnWall(true)
         SuperGremlinInvincible = false
         SuperGremlinsAlive = true
@@ -481,9 +496,39 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Chest, function (sprite, otherSp
 function Level1 () {
     tiles.setTilemap(tilemap`level1`)
 }
+statusbars.onStatusReached(StatusBarKind.Gremlin1Status, statusbars.StatusComparison.EQ, statusbars.ComparisonType.Percentage, 10, function (status) {
+    Gremlin41.vx = SuperGremlinVelo * 5
+    SuperGremlinInvincible = true
+    timer.after(7500, function () {
+        SuperGremlinInvincible = false
+        GremlinShootSpeed = 2500
+        Gremlin41.vx = 20
+    })
+})
 scene.onOverlapTile(SpriteKind.EnemeyProjectile, assets.tile`myTile44`, function (sprite, location) {
     sprite.destroy()
 })
+function princess () {
+    Princess = sprites.create(img`
+        . . . . . f f 4 4 f f . . . . . 
+        . . . . f 5 4 5 5 4 5 f . . . . 
+        . . . f e 4 5 5 5 5 4 e f . . . 
+        . . f b 3 e 4 4 4 4 e 3 b f . . 
+        . . f 3 3 3 3 3 3 3 3 3 3 f . . 
+        . f 3 3 e b 3 e e 3 b e 3 3 f . 
+        . f 3 3 f f e e e e f f 3 3 f . 
+        . f b b f b f e e f b f b b f . 
+        . f b b e 1 f 4 4 f 1 e b b f . 
+        f f b b f 4 4 4 4 4 4 f b b f f 
+        f b b f f f e e e e f f f b b f 
+        . f e e f b d d d d b f e e f . 
+        . . e 4 c d d d d d d c 4 e . . 
+        . . e f b d b d b d b b f e . . 
+        . . . f f 1 d 1 d 1 d f f . . . 
+        . . . . . f f b b f f . . . . . 
+        `, SpriteKind.Princes)
+    tiles.placeOnTile(Princess, tiles.getTileLocation(6, 42))
+}
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile16`, function (sprite, location) {
     if (key == 1) {
         tiles.setTileAt(tiles.getTileLocation(9, 42), assets.tile`myTile7`)
@@ -493,7 +538,17 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile16`, function (sprite, 
         tiles.setTileAt(tiles.getTileLocation(9, 41), sprites.dungeon.floorDark0)
         tiles.setTileAt(tiles.getTileLocation(9, 40), assets.tile`myTile8`)
         scene.cameraShake(4, 500)
+        PrincessTraped = false
     }
+})
+statusbars.onStatusReached(StatusBarKind.Gremlin1Status, statusbars.StatusComparison.EQ, statusbars.ComparisonType.Percentage, 70, function (status) {
+    Gremlin41.vx = SuperGremlinVelo * 5
+    SuperGremlinInvincible = true
+    timer.after(7500, function () {
+        SuperGremlinInvincible = false
+        GremlinShootSpeed = 2500
+        Gremlin41.vx = 20
+    })
 })
 function SheildGremlins () {
     Gremlin11 = sprites.create(img`
@@ -710,20 +765,125 @@ function CharacterTestCheat () {
     mySprite.vy = 0
     controller.moveSprite(mySprite, 200, 200)
 }
-scene.onOverlapTile(SpriteKind.Player, sprites.castle.tileGrass1, function (sprite, location) {
-    mySprite.ay = 0
-    mySprite.vy = 0
-})
-scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile35`, function (sprite, location) {
-    tiles.placeOnTile(mySprite, tiles.getTileLocation(11, 13))
-    moveOnY = 100
-    EvilDragon()
+sprites.onOverlap(SpriteKind.Player, SpriteKind.EnemeyProjectile, function (sprite, otherSprite) {
+    otherSprite.destroy()
+    CharacterStatusBar.value += -10
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSprite) {
     if (SwordInAction) {
         otherSprite.destroy(effects.ashes, 200)
         GremlinKillCount += 1
     }
+    timer.after(150, function () {
+        CharacterStatusBar.value += -5
+        animation.runImageAnimation(
+        otherSprite,
+        [img`
+            ........................
+            ........................
+            ........................
+            ........................
+            ........................
+            ..........ffff..........
+            ........ff1111ff........
+            .......fb111111bf.......
+            .....fffc1111111f.......
+            ...fc111cd1111111f......
+            ...f1b1b1b1111dddf......
+            ...fbfbffcf11fcddf......
+            ......fcf111111bbf......
+            .......ccbdb1b1fcf......
+            .......fffbfbfdff.......
+            ........ffffffff........
+            ........fffffffffff.....
+            .........fffffc111cf....
+            .........fffff1b1b1f....
+            ..........ffffbfbfbf....
+            ...........ffff.........
+            ........................
+            ........................
+            ........................
+            `,img`
+            ........................
+            ........................
+            ........................
+            ........................
+            ........................
+            ..........ffff..........
+            ........ff1111ff........
+            .......fb111111bf.......
+            .......f11111111f.......
+            ......fd11111111df......
+            ....7.fd11111111df......
+            ...7..fd11111111df......
+            ...7..fd11111111df......
+            ...7..fddd1111dddff.....
+            ...77.fbdbfddfbdbfcf....
+            ...777fcdcf11fcdcfbf....
+            ....77fffbdb1bdffcf.....
+            ....fcb1bcffffff........
+            ....f1c1c1ffffff........
+            ....fdfdfdfffff.........
+            .....f.f.f..............
+            ........................
+            ........................
+            ........................
+            `,img`
+            ........................
+            ........................
+            ........................
+            ........................
+            ..........ffff..........
+            ........ff1111ff........
+            .......fb111111bf.......
+            .......f11111111f.......
+            ......fd111111111f......
+            ......fd11111111df......
+            ......fd11111111df......
+            ......fcdd1111ddcff.....
+            .......fbcf11fcbfbbf....
+            .......ffbdb1bdffff.....
+            ........fcbfbfdf........
+            ........ffffffff........
+            ......ffffffffff........
+            .....fcb1bcffff.........
+            ......ffbff.............
+            ........................
+            ........................
+            ........................
+            ........................
+            ........................
+            `,img`
+            ........................
+            ........................
+            ........................
+            ........................
+            ..........ffff..........
+            ........ff1111ff........
+            .......fb111111bf.......
+            .......f11111111f.......
+            ......fd11111111df......
+            ......fdd111111ddf......
+            ......fbdd1111dddf......
+            ......fcdbfddfbdbf......
+            .......fbcf11fcbfff.....
+            .......ffb1111bcfbcf....
+            ........fcdb1bdfbbbf....
+            .......ffffffffffcf.....
+            .....fcb1bcfffff........
+            .....f1b1b1ffff.........
+            ......ffbff.............
+            ........................
+            ........................
+            ........................
+            ........................
+            ........................
+            `],
+        500,
+        false
+        )
+    })
+    pause(500)
 })
 let GremlinShoota1: Sprite = null
 let FireBall: Sprite = null
@@ -735,15 +895,16 @@ let Gremlin22: Sprite = null
 let Gremlin21: Sprite = null
 let Gremlin12: Sprite = null
 let Gremlin11: Sprite = null
-let Gremlin41: Sprite = null
+let Princess: Sprite = null
 let ShootingUp = false
 let SwordInAction = false
-let statusbar: StatusBarSprite = null
+let CharacterStatusBar: StatusBarSprite = null
 let Gremlin1Statusbar: StatusBarSprite = null
-let SuperGremlinInvincible = false
 let CharacterArrow: Sprite = null
 let SheildCreated = false
 let Shield: Sprite = null
+let SuperGremlinInvincible = false
+let Gremlin41: Sprite = null
 let TheWiseOne: Sprite = null
 let mySprite: Sprite = null
 let LegendaryChest: Sprite = null
@@ -753,8 +914,9 @@ let SwordUnlocked = false
 let BossinitilizeFire = false
 let JumpStatus = 0
 let JumpCount = 0
-let moveOnY = 0
+let PrincessTraped = false
 let BowUnlocked = false
+let GremlinShootSpeed = 0
 let key = 0
 let row = 0
 let column = 0
@@ -764,11 +926,14 @@ row = 11
 key = 0
 Level1()
 Character()
+princess()
 SheildGremlins()
 WiseOne()
+GremlinShootSpeed = 2500
 BowUnlocked = false
+PrincessTraped = true
 let moveOnX = 100
-moveOnY = 0
+let moveOnY = 0
 let moveWithButtonsAllowed = 1
 JumpCount = 0
 JumpStatus = 1
@@ -1055,7 +1220,14 @@ forever(function () {
 forever(function () {
 	
 })
-game.onUpdateInterval(randint(4000, 7500), function () {
+forever(function () {
+    if (PrincessTraped) {
+        Princess.say("Help!")
+    } else {
+    	
+    }
+})
+game.onUpdateInterval(randint(GremlinShootSpeed, GremlinShootSpeed * 2.5), function () {
     if (SuperGremlinsAlive) {
         animation.runImageAnimation(
         Gremlin41,
@@ -1176,6 +1348,9 @@ game.onUpdateInterval(randint(4000, 7500), function () {
             . a a a d d d d d a . 
             . . a a a a a a a . . 
             `, Gremlin41, mySprite.x - Gremlin41.x * 1, mySprite.y - Gremlin41.y * 1)
-        mySprite.setKind(SpriteKind.EnemeyProjectile)
+        GremlinShoota1.setKind(SpriteKind.EnemeyProjectile)
+    }
+    if (SuperGremlinInvincible) {
+        GremlinShootSpeed = GremlinShootSpeed * 2
     }
 })
